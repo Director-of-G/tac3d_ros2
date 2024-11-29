@@ -1,0 +1,20 @@
+tac3d:
+  index:
+    geom: leap_hand_right::fingertip_collision
+    frame: finger1_tip_center
+    serial: AD2-0040R
+    port: 9988
+  # middle:
+  #   geom: leap_hand_right::fingertip_2_collision
+  #   serial: AD2-0037L
+  #   port: 9989
+  ring:
+    geom: leap_hand_right::fingertip_3_collision
+    frame: finger3_tip_center
+    serial: AD2-0039L
+    port: 9990
+  thumb:
+    geom: leap_hand_right::thumb_fingertip_collision
+    frame: thumb_tip_center
+    serial: AD2-0038R
+    port: 9991
