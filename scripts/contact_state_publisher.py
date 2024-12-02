@@ -36,6 +36,8 @@ class ContactStatePublisherNode(Node):
 
         # subscribers and publishers
         subscribers = []
+        ats_topics = []
+        ats_slop = 0.1
         for finger, config in self.sensor_config.items():
             sensor_index = len(subscribers)
             # sub = self.create_subscription(
@@ -44,11 +46,15 @@ class ContactStatePublisherNode(Node):
             #     lambda msg: self.contact_force_callback(msg, finger),
             #     10
             # )
-            sub = message_filters.Subscriber(self, WrenchStamped, f'tac3d_contact_force_{sensor_index}')
+            sensor_topic = f'tac3d_contact_force_{sensor_index}'
+            sub = message_filters.Subscriber(self, WrenchStamped, sensor_topic)
             subscribers.append(sub)
-        assert len(subscribers) == 3
-        ts = message_filters.ApproximateTimeSynchronizer(subscribers, 10, slop=0.1)
+            ats_topics.append(sensor_topic)
+        assert len(subscribers) == 4
+        ts = message_filters.ApproximateTimeSynchronizer(subscribers, 20, slop=ats_slop)
         ts.registerCallback(self.contact_force_callback)
+        self.get_logger().info(f'TimeSynchronizer monitors topics {ats_topics} with slop {ats_slop}')
+
         self.num_sensors = len(sensor_config)
         self.subscribers = subscribers
 
@@ -67,14 +73,16 @@ class ContactStatePublisherNode(Node):
         # timers
         # self.contact_timer = self.create_timer(1 / self.contact_state_update_frequency, self.update_contact_state)
 
-    def contact_force_callback(self, msg0:WrenchStamped, msg1:WrenchStamped, msg2:WrenchStamped):
+    def contact_force_callback(self, msg0:WrenchStamped, msg1:WrenchStamped, msg2:WrenchStamped, msg3: WrenchStamped):
         finger0 = list(self.sensor_config.keys())[0]
         finger1 = list(self.sensor_config.keys())[1]
         finger2 = list(self.sensor_config.keys())[2]
+        finger3 = list(self.sensor_config.keys())[3]
 
         self.contact_wrench_buffer[finger0] = msg0
         self.contact_wrench_buffer[finger1] = msg1
         self.contact_wrench_buffer[finger2] = msg2
+        self.contact_wrench_buffer[finger3] = msg3
 
         self.update_contact_state()
 
@@ -107,7 +115,7 @@ class ContactStatePublisherNode(Node):
 
                 msg.names.append(config['geom'])
             except Exception as e:
-                # self.get_logger().warn(f'Failed to get transform: {e}')
+                self.get_logger().warn(f'Failed to get transform: {e}')
                 pass
 
         if len(msg.names) == self.num_sensors:
