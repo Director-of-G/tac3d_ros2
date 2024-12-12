@@ -39,7 +39,7 @@ install(PROGRAMS ${SCRIPT_FILES}
 # Install launch files
 install(DIRECTORY launch/
   DESTINATION share/${PROJECT_NAME}/launch
-  FILES_MATCHING PATTERN "*.launch" PATTERN "*.launch.py"
+  FILES_MATCHING PATTERN "*.launch" PATTERN "*.launch.py" PATTERN "*.py"
 )
 
 # Install config files

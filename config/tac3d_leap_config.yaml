@@ -1,21 +1,26 @@
+server_url: /home/jyp/hardware/tac3d/Tac3D-SDK-v3.2.1/Tac3D-Core/linux-x86_64
 tac3d:
   index:
     geom: leap_hand_right::fingertip_collision
     frame: finger1_tip_center
+    cam_id: 6
     serial: AD2-0040R
     port: 9988
   middle:
     geom: leap_hand_right::fingertip_2_collision
     frame: finger2_tip_center
+    cam_id: 0
     serial: AD2-0037L
     port: 9989
   ring:
     geom: leap_hand_right::fingertip_3_collision
     frame: finger3_tip_center
     serial: AD2-0039L
+    cam_id: 4
     port: 9990
   thumb:
     geom: leap_hand_right::thumb_fingertip_collision
     frame: thumb_tip_center
     serial: AD2-0038R
+    cam_id: 2
     port: 9991
