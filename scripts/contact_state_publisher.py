@@ -27,7 +27,7 @@ class ContactStatePublisherNode(Node):
         sensor_config = yaml.safe_load(open(config_url, 'r'))['tac3d']
 
         # other parameters
-        self.base_frame = 'world'
+        self.base_frame = 'fake_world'
         self.sensor_config = sensor_config
         self.contact_state_update_frequency = 30
 
@@ -100,11 +100,16 @@ class ContactStatePublisherNode(Node):
                 header = wrench_stamped.header
                 wrench = wrench_stamped.wrench
                 wrench_tf2 = Vector3Stamped()
+                normal_tf2 = Vector3Stamped()
                 # wrench_tf2.header.stamp = header.stamp
                 wrench_tf2.header.frame_id = header.frame_id
+                normal_tf2.header.frame_id = header.frame_id
                 wrench_tf2.vector = wrench.force
+                normal_tf2.vector = wrench.torque
                 wrench_tf2 = self.tf_buffer.transform(wrench_tf2, self.base_frame)
+                normal_tf2 = self.tf_buffer.transform(normal_tf2, self.base_frame)
                 wrench.force = wrench_tf2.vector
+                wrench.torque = normal_tf2.vector
                 msg.wrenches.append(wrench)
 
                 point = PointStamped()
