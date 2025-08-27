@@ -20,9 +20,11 @@ def generate_launch_description():
     terminal_commands = ["gnome-terminal", "--window"]
     for i, (_, finger_config) in enumerate(config['tac3d'].items()):
         serial = finger_config['serial']
-        cam_id = finger_config['cam_id']
+        # cam_id is removed in sdk v3.3.0
+        # cam_id = finger_config['cam_id']
         port = finger_config['port']
-        command = f"cd {tac3d_server_root} && ./Tac3D -c ./config/{serial} -d {cam_id} -i 127.0.0.1 -p {port}; exec bash"
+        # command = f"cd {tac3d_server_root} && ./Tac3D -c ./config/{serial} -d {cam_id} -i 127.0.0.1 -p {port}; exec bash"
+        command = f"cd {tac3d_server_root} && ./Tac3D -c ./config/{serial} -i 127.0.0.1 -p {port}; exec bash"
         if i > 0:
             terminal_commands.extend(["--tab", "-e", f"bash -c '{command}'"])
         else:

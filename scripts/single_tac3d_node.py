@@ -19,10 +19,10 @@ class Tac3DReaderNode(Node):
         # declare
         self.declare_parameter('geom', 'default_model::default_collision')  # collision geometry name in SDF
         self.declare_parameter('frame', 'map')                              # frame_id in URDF
-        self.declare_parameter('serial', 'AD2-0040R')                       # sensor serial number
+        self.declare_parameter('serial', 'DL1-GWM0007')                       # sensor serial number
         self.declare_parameter('index', 0)                                  # sensor index
         self.declare_parameter('port', 9988)                                # sensor UDP port
-        self.declare_parameter('debug', False)                              # debug and visualize
+        self.declare_parameter('debug', True)                              # debug and visualize
 
         sensor_frame = self.get_parameter('frame').get_parameter_value().string_value
         sensor_serial = self.get_parameter('serial').get_parameter_value().string_value
@@ -86,6 +86,9 @@ class Tac3DReaderNode(Node):
             D_norm >= self.contact_disp_thres
         ).flatten()
         pts_in_contact = (P+D)[mask_in_contact, :]
+
+        pts_in_contact = np.ones_like(pts_in_contact)
+
         if len(pts_in_contact) > 0:
             self.o3d_pcd.points = o3d.utility.Vector3dVector(pts_in_contact)
             self.o3d_pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamKNN(knn=10))
